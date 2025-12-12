@@ -1,14 +1,11 @@
 import { useState, memo } from 'react';
-import { useRecoilState } from 'recoil';
 import * as Select from '@ariakit/react/select';
-import { FileText, LogOut } from 'lucide-react';
-import { LinkIcon, GearIcon, DropdownMenuSeparator, Avatar } from '@librechat/client';
+import { LogOut, User } from 'lucide-react';
+import { GearIcon, DropdownMenuSeparator, Avatar } from '@librechat/client';
 import { useGetStartupConfig, useGetUserBalance } from '~/data-provider';
-import FilesView from '~/components/Chat/Input/Files/FilesView';
 import { useAuthContext } from '~/hooks/AuthContext';
 import { useLocalize } from '~/hooks';
 import Settings from './Settings';
-import store from '~/store';
 
 function AccountSettings() {
   const localize = useLocalize();
@@ -18,7 +15,6 @@ function AccountSettings() {
     enabled: !!isAuthenticated && startupConfig?.balance?.enabled,
   });
   const [showSettings, setShowSettings] = useState(false);
-  const [showFiles, setShowFiles] = useRecoilState(store.showFiles);
 
   return (
     <Select.SelectProvider>
@@ -62,22 +58,14 @@ function AccountSettings() {
         )}
         <Select.SelectItem
           value=""
-          onClick={() => setShowFiles(true)}
+          onClick={() => {
+            // TODO: Implement My Account functionality
+          }}
           className="select-item text-sm"
         >
-          <FileText className="icon-md" aria-hidden="true" />
-          {localize('com_nav_my_files')}
+          <User className="icon-md" aria-hidden="true" />
+          {localize('com_nav_my_account')}
         </Select.SelectItem>
-        {startupConfig?.helpAndFaqURL !== '/' && (
-          <Select.SelectItem
-            value=""
-            onClick={() => window.open(startupConfig?.helpAndFaqURL, '_blank')}
-            className="select-item text-sm"
-          >
-            <LinkIcon aria-hidden="true" />
-            {localize('com_nav_help_faq')}
-          </Select.SelectItem>
-        )}
         <Select.SelectItem
           value=""
           onClick={() => setShowSettings(true)}
@@ -97,7 +85,6 @@ function AccountSettings() {
           {localize('com_nav_log_out')}
         </Select.SelectItem>
       </Select.SelectPopover>
-      {showFiles && <FilesView open={showFiles} onOpenChange={setShowFiles} />}
       {showSettings && <Settings open={showSettings} onOpenChange={setShowSettings} />}
     </Select.SelectProvider>
   );
