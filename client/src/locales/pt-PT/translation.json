@@ -447,7 +447,7 @@
   "com_nav_font_size_xs": "Extra Pequeno",
   "com_nav_help_faq": "Ajuda & FAQ",
   "com_nav_hide_panel": "Ocultar painel mais à direita",
-  "com_nav_info_balance": "O saldo mostra quantos créditos de tokens tem disponíveis para usar. Os créditos de tokens traduzem-se em valor monetário (por exemplo, 1000 créditos = $0.001 USD)",
+  "com_nav_info_balance": "O saldo mostra quantos créditos de tokens tem disponíveis para usar. Os créditos de tokens traduzem-se em valor monetário (1000 créditos = 1 USD)",
   "com_nav_info_code_artifacts": "Habilita a exibição de artefatos de código experimental ao lado do chat",
   "com_nav_info_code_artifacts_agent": "Permitir o uso de artefactos de código por este agente. Por defeito, instruções adicionais específicas ao uso de artefactos são adicionadas, caso o \"Modo de comando personalizado\" esteja ativo.",
   "com_nav_info_custom_prompt_mode": "Quando habilitado, o prompt padrão do sistema de artefatos não será incluído. Todas as instruções de geração de artefatos devem ser fornecidas manualmente neste modo.",

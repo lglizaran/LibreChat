@@ -480,7 +480,7 @@
   "com_nav_font_size_xs": "Īpaši mazs",
   "com_nav_help_faq": "Palīdzība un bieži uzdotie jautājumi",
   "com_nav_hide_panel": "Slēpt labā sāna paneli",
-  "com_nav_info_balance": "Bilance parāda, cik daudz tokenu kredītu jums ir atlicis izmantot. Tokenu kredīti tiek pārvērsti naudas vērtībā (piemēram, 1000 kredīti = 0,001 USD).",
+  "com_nav_info_balance": "Bilance parāda, cik daudz tokenu kredītu jums ir atlicis izmantot. Tokenu kredīti tiek pārvērsti naudas vērtībā (piemēram, 1000 kredīti = 1 USD).",
   "com_nav_info_code_artifacts": "Iespējo eksperimentāla koda artefaktu rādīšanu blakus sarunai",
   "com_nav_info_code_artifacts_agent": "Iespējo koda artefaktu izmantošanu šim aģentam. Pēc noklusējuma tiek pievienotas papildu instrukcijas, kas attiecas uz artefaktu izmantošanu, ja vien nav iespējots \"Pielāgots uzvednes režīms\".",
   "com_nav_info_custom_prompt_mode": "Ja šī opcija ir iespējota, noklusējuma artefaktu sistēmas uzvedne netiks iekļauta. Šajā režīmā visas artefaktu ģenerēšanas instrukcijas ir jāsniedz manuāli.",
