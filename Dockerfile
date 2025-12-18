@@ -21,6 +21,10 @@ USER node
 
 COPY --chown=node:node . .
 
+# DISABLE SSL GLOBALLY
+ENV NODE_TLS_REJECT_UNAUTHORIZED=0
+ENV npm_config_strict_ssl=false
+
 RUN \
     # Allow mounting of these files, which have no default
     touch .env ; \
@@ -29,7 +33,6 @@ RUN \
     npm config set fetch-retry-maxtimeout 600000 ; \
     npm config set fetch-retries 5 ; \
     npm config set fetch-retry-mintimeout 15000 ; \
-    npm config set strict-ssl false ; \
     npm ci --no-audit
 
 RUN \
