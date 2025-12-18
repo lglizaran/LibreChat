@@ -158,7 +158,8 @@ const tokenValues = Object.assign(
     'gemini-2.5-flash': { prompt: 0.0005, completion: 0.004 }, // modified
     'gemini-2.5-flash-lite': { prompt: 0.0001, completion: 0.0004 },
     'gemini-2.5-pro': { prompt: 0.003, completion: 0.018 }, // modified
-    'gemini-3': { prompt: 0.005, completion: 0.02 }, // modified
+    'gemini-3-flash': { prompt: 0.0008, completion: 0.005 }, // modified
+    'gemini-3-pro': { prompt: 0.005, completion: 0.02 }, // modified
     'gemini-pro-vision': { prompt: 0.0005, completion: 0.0015 },
     grok: { prompt: 0.002, completion: 0.01 }, // Base pattern defaults to grok-2
     'grok-beta': { prompt: 0.005, completion: 0.015 },
@@ -175,7 +176,7 @@ const tokenValues = Object.assign(
     'grok-3-mini-fast': { prompt: 0.0006, completion: 0.004 },
     'grok-4': { prompt: 0.003, completion: 0.015 },
     'grok-4-fast': { prompt: 0.0002, completion: 0.0005 },
-    'grok-4-1-fast': { prompt: 0.0002, completion: 0.0005 }, // covers reasoning & non-reasoning variants
+    'grok-4-1-fast': { prompt: 0.0005, completion: 0.0015 }, // modified, covers reasoning & non-reasoning variants
     'grok-code-fast': { prompt: 0.0002, completion: 0.0015 },
     codestral: { prompt: 0.0003, completion: 0.0009 },
     'ministral-3b': { prompt: 0.00004, completion: 0.00004 },
