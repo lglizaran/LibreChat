@@ -298,6 +298,8 @@ This section serves as an overview of the documentation stored under `.clinerule
   - Configuration, Docker, docker-compose, Helm/Kubernetes, Redis, and environments.
 - `testing.md`
   - Testing strategy and layout for backend, frontend, and e2e.
+- `token-credits-pricing.md`
+  - Explanation of token usage, credit costs, and USD pricing logic.
 - `cli-and-readme.md` (this file)
   - CLI/admin scripts documentation and `.clinerules` index.
 

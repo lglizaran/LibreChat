@@ -256,6 +256,7 @@ Additional detailed documentation in `.clinerules/`:
 - `.clinerules/frontend.md` – React app structure, routing, state management, and feature views.
 - `.clinerules/deployment.md` – Docker, Kubernetes/Helm, external services, and environment configuration.
 - `.clinerules/testing.md` – Testing taxonomy and practices.
+- `.clinerules/token-credits-pricing.md` – Explanation of token usage, credit costs, and USD pricing logic.
 - `.clinerules/cli.md` – Admin and maintenance CLI commands under `config/` and other utilities.
 - `.clinerules/README.md` – Index for this rules directory and how to maintain it.
 
