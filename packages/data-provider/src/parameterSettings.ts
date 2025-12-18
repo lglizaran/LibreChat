@@ -632,7 +632,7 @@ const google: Record<string, SettingDefinition> = {
     description: 'com_endpoint_google_use_search_grounding',
     descriptionCode: true,
     type: 'boolean',
-    default: false,
+    default: true,
     component: 'switch',
     optionType: 'model',
     showDefault: false,
