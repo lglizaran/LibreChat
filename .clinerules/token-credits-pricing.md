@@ -10,21 +10,21 @@ This document explains the logic used by LibreChat to calculate token usage, cre
 
 ## 2. Conversion Logic
 
-LibreChat uses a standardized conversion factor between USD and internal credits:
+LibreChat uses a standardized conversion factor between EUR and internal credits:
 
-> **$1.00 USD = 1,000 Credits**
+> **1,00 € EUR = 1,000 Credits**
 
 This means:
-- 1 Credit = $0.001 USD
-- 10 Credits = $0.01 USD
-- 100 Credits = $0.10 USD
+- 1 Credit = 0,001 € EUR
+- 10 Credits = 0,01 € EUR
+- 100 Credits = 0,10 € EUR
 
 ## 3. Model Rates (`api/models/tx.js`)
 
-Pricing for each model is defined in `api/models/tx.js`. The values listed (multipliers) represent the **cost in USD per 1,000 tokens**.
+Pricing for each model is defined in `api/models/tx.js`. The values listed (multipliers) represent the **cost in EUR per 1,000 tokens** (assuming a 1:1 parity for credit calculation purposes).
 
-Because of the 1,000 credits per $1 conversion, the multiplier value in the codebase conveniently serves a dual purpose:
-1. **USD Cost per 1,000 tokens**.
+Because of the 1,000 credits per 1 € conversion, the multiplier value in the codebase conveniently serves a dual purpose:
+1. **EUR Cost per 1,000 tokens**.
 2. **Credit Cost per 1 token**.
 
 ### Example: GPT-4o-mini
@@ -32,7 +32,7 @@ Because of the 1,000 credits per $1 conversion, the multiplier value in the code
 - **Completion Rate (multiplier)**: `0.0006`
 
 For a usage of 1,000 prompt tokens:
-- **USD Cost**: `(1,000 / 1,000) * 0.00015 = $0.00015`
+- **EUR Cost**: `(1,000 / 1,000) * 0.00015 = 0,00015 €`
 - **Credit Cost**: `1,000 * 0.00015 = 0.15 Credits`
 
 ## 4. Implementation Logic
@@ -51,11 +51,11 @@ The `calculateTokenValue` function calculates the final credit amount:
 ## 5. Summary Formulae
 
 - **Total Credits Spent** = `(Prompt Tokens * Prompt Multiplier) + (Completion Tokens * Completion Multiplier)`
-- **Total USD Equivalent** = `Total Credits Spent / 1,000`
+- **Total EUR Equivalent** = `Total Credits Spent / 1,000`
 
 ## 6. Administrative Tools
 
-- **`config/export-costs.js`**: Aggregates transactions and converts credits back to USD for reporting (`cost = credits / 1000`).
+- **`config/export-costs.js`**: Aggregates transactions and converts credits back to EUR for reporting (`cost = credits / 1000`).
 - **`config/add-balance.js`**: Used to top up user credits.
 - **`config/set-balance.js`**: Used to precisely set a user's credit balance.
 
@@ -64,7 +64,7 @@ The `calculateTokenValue` function calculates the final credit amount:
 LibreChat uses **Stripe Elements** for an embedded, secure credit purchase experience.
 
 - **Add Credits UI**: Users select a package or custom amount in the "My Account" interface.
-- **Conversion**: Purchasing follows the standard rate: **1 USD = 1,000 Credits**.
+- **Conversion**: Purchasing follows the standard rate: **1 EUR = 1,000 Credits**.
 - **Flow**:
   1. **Initialization**: Frontend calls `POST /api/balance/payment-intent` to get a Stripe `clientSecret`.
   2. **Payment**: The `PaymentForm` component renders the Stripe `PaymentElement` inline.

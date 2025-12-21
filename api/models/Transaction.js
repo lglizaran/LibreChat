@@ -1,6 +1,7 @@
 const { logger } = require('@librechat/data-schemas');
 const { getMultiplier, getCacheMultiplier } = require('./tx');
 const { Transaction, Balance } = require('~/db/models');
+const { getExchangeRate } = require('~/server/services/ExchangeRate');
 
 const cancelRate = 1.15;
 
@@ -137,12 +138,17 @@ const updateBalance = async ({ user, incrementValue, setValues }) => {
 };
 
 /** Method to calculate and set the tokenValue for a transaction */
-function calculateTokenValue(txn) {
+async function calculateTokenValue(txn) {
   if (!txn.valueKey || !txn.tokenType) {
     txn.tokenValue = txn.rawAmount;
   }
   const { valueKey, tokenType, model, endpointTokenConfig } = txn;
-  const multiplier = Math.abs(getMultiplier({ valueKey, tokenType, model, endpointTokenConfig }));
+  let multiplier = Math.abs(getMultiplier({ valueKey, tokenType, model, endpointTokenConfig }));
+
+  // Convert USD to EUR
+  const rate = await getExchangeRate();
+  multiplier *= rate;
+
   txn.rate = multiplier;
   txn.tokenValue = txn.rawAmount * multiplier;
   if (txn.context && txn.tokenType === 'completion' && txn.context === 'incomplete') {
@@ -166,7 +172,7 @@ async function createAutoRefillTransaction(txData) {
   }
   const transaction = new Transaction(txData);
   transaction.endpointTokenConfig = txData.endpointTokenConfig;
-  calculateTokenValue(transaction);
+  await calculateTokenValue(transaction);
   await transaction.save();
 
   const balanceResponse = await updateBalance({
@@ -200,7 +206,7 @@ async function createTransaction(_txData) {
 
   const transaction = new Transaction(txData);
   transaction.endpointTokenConfig = txData.endpointTokenConfig;
-  calculateTokenValue(transaction);
+  await calculateTokenValue(transaction);
 
   await transaction.save();
   if (!balance?.enabled) {
@@ -236,7 +242,7 @@ async function createStructuredTransaction(_txData) {
     endpointTokenConfig: txData.endpointTokenConfig,
   });
 
-  calculateStructuredTokenValue(transaction);
+  await calculateStructuredTokenValue(transaction);
 
   await transaction.save();
 
@@ -260,20 +266,26 @@ async function createStructuredTransaction(_txData) {
 }
 
 /** Method to calculate token value for structured tokens */
-function calculateStructuredTokenValue(txn) {
+async function calculateStructuredTokenValue(txn) {
   if (!txn.tokenType) {
     txn.tokenValue = txn.rawAmount;
     return;
   }
 
   const { model, endpointTokenConfig } = txn;
+  const rate = await getExchangeRate();
 
   if (txn.tokenType === 'prompt') {
-    const inputMultiplier = getMultiplier({ tokenType: 'prompt', model, endpointTokenConfig });
-    const writeMultiplier =
+    let inputMultiplier = getMultiplier({ tokenType: 'prompt', model, endpointTokenConfig });
+    let writeMultiplier =
       getCacheMultiplier({ cacheType: 'write', model, endpointTokenConfig }) ?? inputMultiplier;
-    const readMultiplier =
+    let readMultiplier =
       getCacheMultiplier({ cacheType: 'read', model, endpointTokenConfig }) ?? inputMultiplier;
+
+    // Convert USD to EUR
+    inputMultiplier *= rate;
+    writeMultiplier *= rate;
+    readMultiplier *= rate;
 
     txn.rateDetail = {
       input: inputMultiplier,

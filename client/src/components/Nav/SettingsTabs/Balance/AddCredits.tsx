@@ -94,7 +94,7 @@ export default function AddCredits({ onCancel }: TAddCreditsProps) {
                 setSelectedAmount(pkg.amount);
               }}
             >
-              <span className="text-lg font-bold">${pkg.amount}</span>
+              <span className="text-lg font-bold">{pkg.amount}€</span>
               <span className="text-xs opacity-80">{(pkg.credits / 1000)}k credits</span>
             </button>
           ))}
@@ -115,7 +115,7 @@ export default function AddCredits({ onCancel }: TAddCreditsProps) {
            
            {isCustom && (
              <div className="mt-2 flex items-center gap-2">
-               <span className="text-text-primary">$</span>
+               <span className="text-text-primary">€</span>
                <input
                  type="number"
                  min="1"
@@ -132,7 +132,7 @@ export default function AddCredits({ onCancel }: TAddCreditsProps) {
       <div className="rounded-lg bg-surface-secondary p-4">
         <div className="flex justify-between items-center mb-2">
           <span className="text-sm text-text-secondary">Cost</span>
-          <span className="font-medium text-text-primary">${currentAmount.toFixed(2)}</span>
+          <span className="font-medium text-text-primary">€{currentAmount.toFixed(2)}</span>
         </div>
         <div className="flex justify-between items-center border-t border-border-light dark:border-border-dark pt-2">
           <span className="text-sm text-text-secondary">Total Credits</span>
