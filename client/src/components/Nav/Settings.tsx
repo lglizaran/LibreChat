@@ -19,7 +19,6 @@ import {
   Speech,
   Personalization,
   Data,
-  Balance,
   Account,
 } from './SettingsTabs';
 import usePersonalizationAccess from '~/hooks/usePersonalizationAccess';
@@ -43,7 +42,6 @@ export default function Settings({ open, onOpenChange }: TDialogProps) {
       SettingsTabValues.SPEECH,
       ...(hasAnyPersonalizationFeature ? [SettingsTabValues.PERSONALIZATION] : []),
       SettingsTabValues.DATA,
-      ...(startupConfig?.balance?.enabled ? [SettingsTabValues.BALANCE] : []),
       SettingsTabValues.ACCOUNT,
     ];
     const currentIndex = tabs.indexOf(activeTab);
@@ -107,15 +105,6 @@ export default function Settings({ open, onOpenChange }: TDialogProps) {
       icon: <DataIcon />,
       label: 'com_nav_setting_data',
     },
-    ...(startupConfig?.balance?.enabled
-      ? [
-          {
-            value: SettingsTabValues.BALANCE,
-            icon: <DollarSign size={18} />,
-            label: 'com_nav_setting_balance' as TranslationKeys,
-          },
-        ]
-      : ([] as { value: SettingsTabValues; icon: React.JSX.Element; label: TranslationKeys }[])),
     {
       value: SettingsTabValues.ACCOUNT,
       icon: <UserIcon />,
@@ -243,11 +232,6 @@ export default function Settings({ open, onOpenChange }: TDialogProps) {
                     <Tabs.Content value={SettingsTabValues.DATA} tabIndex={-1}>
                       <Data />
                     </Tabs.Content>
-                    {startupConfig?.balance?.enabled && (
-                      <Tabs.Content value={SettingsTabValues.BALANCE} tabIndex={-1}>
-                        <Balance />
-                      </Tabs.Content>
-                    )}
                     <Tabs.Content value={SettingsTabValues.ACCOUNT} tabIndex={-1}>
                       <Account />
                     </Tabs.Content>
