@@ -1,9 +1,10 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Dialog, DialogPanel, DialogTitle, Transition, TransitionChild } from '@headlessui/react';
 import { useGetStartupConfig, useGetUserBalance } from '~/data-provider';
 import { useAuthContext, useLocalize } from '~/hooks';
 import { cn } from '~/utils';
 import TokenCreditsItem from './SettingsTabs/Balance/TokenCreditsItem';
+import AddCredits from './SettingsTabs/Balance/AddCredits';
 
 type TMyAccountProps = {
   open: boolean;
@@ -14,6 +15,7 @@ export default function MyAccount({ open, onOpenChange }: TMyAccountProps) {
   const localize = useLocalize();
   const { isAuthenticated } = useAuthContext();
   const { data: startupConfig } = useGetStartupConfig();
+  const [showAddCredits, setShowAddCredits] = useState(false);
 
   const balanceQuery = useGetUserBalance({
     enabled: !!isAuthenticated && !!startupConfig?.balance?.enabled,
@@ -54,7 +56,7 @@ export default function MyAccount({ open, onOpenChange }: TMyAccountProps) {
                 as="div"
               >
                 <h2 className="text-lg font-medium leading-6 text-text-primary">
-                  {localize('com_nav_my_account')}
+                  {showAddCredits ? localize('com_nav_add_credits') : localize('com_nav_my_account')}
                 </h2>
                 <button
                   type="button"
@@ -80,24 +82,26 @@ export default function MyAccount({ open, onOpenChange }: TMyAccountProps) {
                 </button>
               </DialogTitle>
               <div className="p-6">
-                <div className="flex flex-col gap-6">
-                  {/* Balance Section */}
-                  <div className="space-y-2">
-                    <TokenCreditsItem tokenCredits={tokenCredits} />
+                {showAddCredits ? (
+                  <AddCredits onCancel={() => setShowAddCredits(false)} />
+                ) : (
+                  <div className="flex flex-col gap-6">
+                    {/* Balance Section */}
+                    <div className="space-y-2">
+                      <TokenCreditsItem tokenCredits={tokenCredits} />
+                    </div>
+                    
+                    {/* Add Credits Section */}
+                    <div className="flex justify-end">
+                      <button
+                        className="btn btn-primary"
+                        onClick={() => setShowAddCredits(true)}
+                      >
+                        {localize('com_nav_add_credits')}
+                      </button>
+                    </div>
                   </div>
-                  
-                  {/* Add Credits Section */}
-                  <div className="flex justify-end">
-                    <button
-                      className="btn btn-primary"
-                      onClick={() => {
-                        // No action for now
-                      }}
-                    >
-                      {localize('com_nav_add_credits')}
-                    </button>
-                  </div>
-                </div>
+                )}
               </div>
             </DialogPanel>
           </div>

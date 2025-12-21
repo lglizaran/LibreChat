@@ -58,3 +58,9 @@ The `calculateTokenValue` function calculates the final credit amount:
 - **`config/export-costs.js`**: Aggregates transactions and converts credits back to USD for reporting (`cost = credits / 1000`).
 - **`config/add-balance.js`**: Used to top up user credits.
 - **`config/set-balance.js`**: Used to precisely set a user's credit balance.
+
+## 7. Purchasing Credits
+
+- **Add Credits UI**: Users can purchase credits via the "My Account" interface.
+- **Conversion**: When purchasing, the system applies the standard rate: **1 USD = 1,000 Credits**.
+- **Backend**: The `/balance/credits` endpoint handles the transaction creation and balance update.

@@ -109,6 +109,10 @@ export function getUserBalance(): Promise<t.TBalanceResponse> {
   return request.get(endpoints.balance());
 }
 
+export function addCredits(payload: { amount: number }): Promise<t.TBalanceResponse> {
+  return request.post(endpoints.addCredits(), payload);
+}
+
 export const updateTokenCount = (text: string) => {
   return request.post(endpoints.tokenizer(), { arg: text });
 };
