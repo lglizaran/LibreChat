@@ -4,6 +4,8 @@ services:
     build:
       context: .
       target: node
+      args:
+        VITE_STRIPE_PUBLISHABLE_KEY: ${VITE_STRIPE_PUBLISHABLE_KEY}
     volumes:
       - type: bind
         source: ./librechat.yaml

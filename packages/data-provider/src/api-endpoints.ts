@@ -44,6 +44,8 @@ export const user = () => `${BASE_URL}/api/user`;
 
 export const balance = () => `${BASE_URL}/api/balance`;
 export const addCredits = () => `${balance()}/credits`;
+export const paymentIntent = () => `${balance()}/payment-intent`;
+export const verifyPayment = () => `${balance()}/verify-payment`;
 
 export const userPlugins = () => `${BASE_URL}/api/user/plugins`;
 

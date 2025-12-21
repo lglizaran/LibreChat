@@ -1,8 +1,13 @@
 import React, { useState } from 'react';
+import { loadStripe } from '@stripe/stripe-js';
+import { Elements } from '@stripe/react-stripe-js';
 import { useLocalize } from '~/hooks';
-import { useAddCreditsMutation } from '~/data-provider';
+import { useCreatePaymentIntentMutation } from '~/data-provider';
 import { cn } from '~/utils';
 import { useToastContext } from '@librechat/client';
+import PaymentForm from './PaymentForm';
+
+const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY || '');
 
 type TAddCreditsProps = {
   onCancel: () => void;
@@ -22,16 +27,16 @@ export default function AddCredits({ onCancel }: TAddCreditsProps) {
   const [customAmount, setCustomAmount] = useState<string>('');
   const [isCustom, setIsCustom] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [clientSecret, setClientSecret] = useState('');
 
-  const addCreditsMutation = useAddCreditsMutation({
-    onSuccess: () => {
+  const createPaymentIntent = useCreatePaymentIntentMutation({
+    onSuccess: (data) => {
+      setClientSecret(data.clientSecret);
       setIsLoading(false);
-      showToast({ message: localize('com_ui_save_key_success').replace('API key saved', 'Credits added'), status: 'success' });
-      onCancel();
     },
     onError: (error: any) => {
       setIsLoading(false);
-      const errorMessage = error.response?.data?.error || error.message || 'Failed to add credits';
+      const errorMessage = error.response?.data?.error || error.message || 'Failed to initialize payment';
       showToast({ message: errorMessage, status: 'error' });
     }
   });
@@ -40,9 +45,32 @@ export default function AddCredits({ onCancel }: TAddCreditsProps) {
 
   const handlePurchase = () => {
     setIsLoading(true);
-    addCreditsMutation.mutate({ amount: currentAmount });
+    createPaymentIntent.mutate({ amount: currentAmount });
   };
   const currentCredits = currentAmount * 1000;
+
+  if (clientSecret) {
+    const options = {
+      clientSecret,
+      appearance: { theme: 'stripe' as const },
+    };
+
+    return (
+      <div className="animate-in fade-in slide-in-from-right-4 duration-300">
+        <div className="mb-4">
+          <button
+            onClick={() => setClientSecret('')}
+            className="text-sm text-text-secondary hover:text-text-primary"
+          >
+            &larr; Back
+          </button>
+        </div>
+        <Elements options={options} stripe={stripePromise}>
+          <PaymentForm onSuccess={onCancel} />
+        </Elements>
+      </div>
+    );
+  }
 
   return (
     <div className="flex flex-col gap-6 animate-in fade-in slide-in-from-right-4 duration-300">

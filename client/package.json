@@ -112,7 +112,9 @@
     "tailwind-merge": "^1.9.1",
     "tailwindcss-animate": "^1.0.5",
     "tailwindcss-radix": "^2.8.0",
-    "zod": "^3.22.4"
+    "zod": "^3.22.4",
+    "@stripe/react-stripe-js": "^2.4.0",
+    "@stripe/stripe-js": "^2.2.0"
   },
   "devDependencies": {
     "@babel/plugin-transform-runtime": "^7.22.15",

@@ -25,6 +25,9 @@ COPY --chown=node:node . .
 ENV NODE_TLS_REJECT_UNAUTHORIZED=0
 ENV npm_config_strict_ssl=false
 
+ARG VITE_STRIPE_PUBLISHABLE_KEY
+ENV VITE_STRIPE_PUBLISHABLE_KEY=$VITE_STRIPE_PUBLISHABLE_KEY
+
 RUN \
     # Allow mounting of these files, which have no default
     touch .env ; \
@@ -33,7 +36,7 @@ RUN \
     npm config set fetch-retry-maxtimeout 600000 ; \
     npm config set fetch-retries 5 ; \
     npm config set fetch-retry-mintimeout 15000 ; \
-    npm ci --no-audit
+    npm install --no-audit
 
 RUN \
     # Build packages one by one to ensure each succeeds

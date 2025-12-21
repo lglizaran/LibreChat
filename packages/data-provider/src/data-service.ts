@@ -113,6 +113,14 @@ export function addCredits(payload: { amount: number }): Promise<t.TBalanceRespo
   return request.post(endpoints.addCredits(), payload);
 }
 
+export function createPaymentIntent(payload: { amount: number }): Promise<{ clientSecret: string }> {
+  return request.post(endpoints.paymentIntent(), payload);
+}
+
+export function verifyPayment(payload: { paymentIntentId: string }): Promise<{ success: boolean; balance: number }> {
+  return request.post(endpoints.verifyPayment(), payload);
+}
+
 export const updateTokenCount = (text: string) => {
   return request.post(endpoints.tokenizer(), { arg: text });
 };
