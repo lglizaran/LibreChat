@@ -6,6 +6,7 @@ import { useGetStartupConfig, useGetUserBalance } from '~/data-provider';
 import { useAuthContext } from '~/hooks/AuthContext';
 import { useLocalize } from '~/hooks';
 import Settings from './Settings';
+import MyAccount from './MyAccount';
 
 function AccountSettings() {
   const localize = useLocalize();
@@ -15,6 +16,7 @@ function AccountSettings() {
     enabled: !!isAuthenticated && startupConfig?.balance?.enabled,
   });
   const [showSettings, setShowSettings] = useState(false);
+  const [showMyAccount, setShowMyAccount] = useState(false);
 
   return (
     <Select.SelectProvider>
@@ -60,7 +62,7 @@ function AccountSettings() {
         <Select.SelectItem
           value=""
           onClick={() => {
-            // TODO: Implement My Account functionality
+            setShowMyAccount(true);
           }}
           className="select-item text-sm"
         >
@@ -87,6 +89,7 @@ function AccountSettings() {
         </Select.SelectItem>
       </Select.SelectPopover>
       {showSettings && <Settings open={showSettings} onOpenChange={setShowSettings} />}
+      {showMyAccount && <MyAccount open={showMyAccount} onOpenChange={setShowMyAccount} />}
     </Select.SelectProvider>
   );
 }
