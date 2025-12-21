@@ -59,8 +59,16 @@ The `calculateTokenValue` function calculates the final credit amount:
 - **`config/add-balance.js`**: Used to top up user credits.
 - **`config/set-balance.js`**: Used to precisely set a user's credit balance.
 
-## 7. Purchasing Credits
+## 7. Purchasing Credits (Stripe Integration)
 
-- **Add Credits UI**: Users can purchase credits via the "My Account" interface.
-- **Conversion**: When purchasing, the system applies the standard rate: **1 USD = 1,000 Credits**.
-- **Backend**: The `/balance/credits` endpoint handles the transaction creation and balance update.
+LibreChat uses **Stripe Elements** for an embedded, secure credit purchase experience.
+
+- **Add Credits UI**: Users select a package or custom amount in the "My Account" interface.
+- **Conversion**: Purchasing follows the standard rate: **1 USD = 1,000 Credits**.
+- **Flow**:
+  1. **Initialization**: Frontend calls `POST /api/balance/payment-intent` to get a Stripe `clientSecret`.
+  2. **Payment**: The `PaymentForm` component renders the Stripe `PaymentElement` inline.
+  3. **Verification**: After Stripe confirms the payment, the frontend calls `POST /api/balance/verify-payment` for immediate backend verification and credit allocation.
+  4. **Webhook backup**: Stripe sends a `payment_intent.succeeded` webhook to `POST /api/balance/webhook` as a reliable background fallback.
+
+- **Backend logic**: Located in `api/server/controllers/Balance.js`, uses the `stripe` library and the `createTransaction` model.

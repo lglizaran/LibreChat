@@ -171,7 +171,7 @@ Typical structure:
       - Profile info.
       - Language and UI preferences.
       - Tokens/usage view (if exposed).
-      - Add credits UI with package selection.
+      - Add credits UI with package selection and **Stripe Elements** integration.
     - Logout and session handling.
 
   - **Settings & Admin UX**

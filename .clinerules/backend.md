@@ -91,7 +91,7 @@ The `server` directory is further subdivided:
 
 - `api/server/routes/`
   - Route registration modules, structured by domain:
-    - `/auth`, `/user`, `/conversation`, `/message`, `/agents`, `/files`, `/balance`, etc.
+    - `/auth`, `/user`, `/conversation`, `/message`, `/agents`, `/files`, `/balance` (Stripe integration), etc.
   - Each route module:
     - Declares HTTP endpoints and methods.
     - Applies relevant middleware (auth, rate limiting).

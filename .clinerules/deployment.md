@@ -11,6 +11,7 @@ This document describes how LibreChat is configured and deployed across environm
   - Redis connection and options
   - JWT/auth secrets and session config
   - AI provider API keys and endpoints
+  - **Stripe integration** (`STRIPE_SECRET_KEY`, `STRIPE_WEBHOOK_SECRET`, `VITE_STRIPE_PUBLISHABLE_KEY`)
   - Feature flags and optional integrations (RAG, web search, etc.)
 - For local dev, copy `.env.example` → `.env` (not committed).
 
@@ -38,6 +39,9 @@ Backend tests:
 ## 2. Docker & Local Deployment
 
 Top-level Docker artifacts:
+
+- **Build Arguments**:
+  - `VITE_STRIPE_PUBLISHABLE_KEY`: Must be provided as a build-time argument (via `docker-compose.override.yml` or CLI) to be embedded in the React frontend bundle.
 
 - `Dockerfile` – main container image for LibreChat (multi-stage build).
 - `Dockerfile.multi` – supporting image for multi-service builds (often used in more complex deployments).
