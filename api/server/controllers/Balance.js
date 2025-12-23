@@ -73,9 +73,12 @@ async function createPaymentIntent(req, res) {
   }
 
   try {
+    const { email, name, username } = req.user;
     const metadata = {
       userId: req.user.id,
       credits: amount * 1000,
+      email,
+      name: name || username,
     };
     console.log('[Stripe] Creating intent with metadata:', metadata);
 
@@ -83,6 +86,7 @@ async function createPaymentIntent(req, res) {
       amount: Math.round(amount * 100),
       currency: 'eur',
       metadata,
+      receipt_email: email,
       automatic_payment_methods: {
         enabled: true,
       },
