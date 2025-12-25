@@ -139,6 +139,12 @@ const updateBalance = async ({ user, incrementValue, setValues }) => {
 
 /** Method to calculate and set the tokenValue for a transaction */
 async function calculateTokenValue(txn) {
+  if (txn.tokenType === 'credits') {
+    txn.tokenValue = txn.rawAmount;
+    txn.rate = 1;
+    return;
+  }
+
   if (!txn.valueKey || !txn.tokenType) {
     txn.tokenValue = txn.rawAmount;
   }
