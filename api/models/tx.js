@@ -114,8 +114,9 @@ const tokenValues = Object.assign(
     'gpt-4o-mini': { prompt: 0.00015, completion: 0.0006 },
     'gpt-5': { prompt: 0.00125, completion: 0.01 },
     'gpt-5-nano': { prompt: 0.00005, completion: 0.0004 },
-    'gpt-5-mini': { prompt: 0.00025, completion: 0.002 },
+    'gpt-5-mini': { prompt: 0.0005, completion: 0.004 }, //modified
     'gpt-5-pro': { prompt: 0.015, completion: 0.12 },
+    'gpt-5.2': { pprompt: 0.0026, completion: 0.021 }, //modified
     o1: { prompt: 0.015, completion: 0.06 },
     'o1-mini': { prompt: 0.0011, completion: 0.0044 },
     'o1-preview': { prompt: 0.015, completion: 0.06 },
@@ -159,7 +160,7 @@ const tokenValues = Object.assign(
     'gemini-2.5-flash-lite': { prompt: 0.0001, completion: 0.0004 },
     'gemini-2.5-pro': { prompt: 0.003, completion: 0.018 }, // modified
     'gemini-3-flash': { prompt: 0.0008, completion: 0.005 }, // modified
-    'gemini-3-pro': { prompt: 0.005, completion: 0.02 }, // modified
+    'gemini-3-pro': { prompt: 0.003, completion: 0.018 }, // modified
     'gemini-pro-vision': { prompt: 0.0005, completion: 0.0015 },
     grok: { prompt: 0.002, completion: 0.01 }, // Base pattern defaults to grok-2
     'grok-beta': { prompt: 0.005, completion: 0.015 },
