@@ -116,7 +116,7 @@ const tokenValues = Object.assign(
     'gpt-5-nano': { prompt: 0.00005, completion: 0.0004 },
     'gpt-5-mini': { prompt: 0.0005, completion: 0.004 }, //modified
     'gpt-5-pro': { prompt: 0.015, completion: 0.12 },
-    'gpt-5.2': { pprompt: 0.0026, completion: 0.021 }, //modified
+    'gpt-5.2': { prompt: 0.0026, completion: 0.021 }, //modified
     o1: { prompt: 0.015, completion: 0.06 },
     'o1-mini': { prompt: 0.0011, completion: 0.0044 },
     'o1-preview': { prompt: 0.015, completion: 0.06 },
