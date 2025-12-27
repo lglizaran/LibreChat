@@ -38,7 +38,7 @@ export default function StartupLayout({ isAuthenticated }: { isAuthenticated?: b
   }, [isAuthenticated, navigate, data]);
 
   useEffect(() => {
-    document.title = startupConfig?.appTitle || 'Generativ App';
+    document.title = startupConfig?.appTitle || 'Generativ';
   }, [startupConfig?.appTitle]);
 
   useEffect(() => {
