@@ -98,9 +98,9 @@ const errorMessages = {
       windowInMinutes > 1 ? `${windowInMinutes} minutes` : 'minute'
     }.`;
   },
-  token_balance: (json: TTokenBalance) => {
-    const { balance, tokenCost, promptTokens, generations } = json;
-    const message = `Insufficient Funds! Balance: ${balance}. Prompt tokens: ${promptTokens}. Cost: ${tokenCost}.`;
+  token_balance: (json: TTokenBalance, localize: LocalizeFunction) => {
+    const { generations } = json;
+    const message = localize('com_error_insufficient_funds');
     return (
       <>
         {message}
