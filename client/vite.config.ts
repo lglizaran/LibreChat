@@ -58,8 +58,8 @@ export default defineConfig(({ command }) => ({
       },
       includeAssets: [],
       manifest: {
-        name: 'ChatApp',
-        short_name: 'ChatApp',
+        name: 'generativ',
+        short_name: 'generativ',
         display: 'standalone',
         background_color: '#000000',
         theme_color: '#009688',

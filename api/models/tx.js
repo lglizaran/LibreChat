@@ -138,6 +138,7 @@ const tokenValues = Object.assign(
     'claude-haiku-4-5': { prompt: 0.001, completion: 0.005 },
     'claude-opus-4': { prompt: 0.015, completion: 0.075 },
     'claude-opus-4-5': { prompt: 0.005, completion: 0.025 },
+    'claude-sonnet-4-5': { prompt: 0.003, completion: 0.015 },
     'claude-sonnet-4': { prompt: 0.003, completion: 0.015 },
     'command-r': { prompt: 0.0005, completion: 0.0015 },
     'command-r-plus': { prompt: 0.003, completion: 0.015 },

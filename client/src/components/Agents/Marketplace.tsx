@@ -57,7 +57,7 @@ const AgentMarketplace: React.FC<AgentMarketplaceProps> = ({ className = '' }) =
   const scrollContainerRef = useRef<HTMLDivElement>(null);
 
   // Set page title
-  useDocumentTitle(`${localize('com_agents_marketplace')} | Generativ App`);
+  useDocumentTitle(`${localize('com_agents_marketplace')} | generativ`);
 
   // Ensure right sidebar is always visible in marketplace
   useEffect(() => {
