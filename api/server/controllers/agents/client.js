@@ -309,6 +309,17 @@ class AgentClient extends BaseClient {
       .join('\n')
       .trim();
 
+    const date = this.currentDateString;
+    const user = this.options.req.user;
+    const userName = user?.name || user?.username || user?.email || 'User';
+    const contextInfo = `Current Date: ${date}\nUser: ${userName}`;
+
+    if (systemContent) {
+      systemContent = `${contextInfo}\n\n${systemContent}`;
+    } else {
+      systemContent = contextInfo;
+    }
+
     if (this.options.attachments) {
       const attachments = await this.options.attachments;
       const latestMessage = orderedMessages[orderedMessages.length - 1];
@@ -458,6 +469,28 @@ class AgentClient extends BaseClient {
     if (systemContent) {
       this.options.agent.instructions = systemContent;
     }
+
+    // Message logging block (for testing purposes)
+    // try {
+    //   const fs = require('fs');
+    //   const path = require('path');
+    //   // Determine log directory (handle Docker /app/logs vs local api/logs)
+    //   let logDir;
+    //   if (process.cwd() === '/app') {
+    //     logDir = '/app/logs';
+    //   } else {
+    //     logDir = path.join(__dirname, '..', '..', '..', 'logs');
+    //   }
+
+    //   if (!fs.existsSync(logDir)) {
+    //     fs.mkdirSync(logDir, { recursive: true });
+    //   }
+    //   const logFile = path.join(logDir, 'conversation.log');
+    //   const logEntry = `\n\n[${new Date().toISOString()}] Conversation ID: ${this.conversationId}\nSystem Prompt:\n${systemContent}\n${JSON.stringify(result, null, 2)}\n`;
+    //   fs.appendFileSync(logFile, logEntry);
+    // } catch (e) {
+    //   logger.error('[AgentClient] Error logging conversation', e);
+    // }
 
     return result;
   }
