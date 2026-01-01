@@ -1,7 +1,9 @@
-import { useState, memo } from 'react';
+import { useState, memo, useRef } from 'react';
+import { useRecoilState } from 'recoil';
 import * as Select from '@ariakit/react/select';
-import { LogOut, User } from 'lucide-react';
-import { GearIcon, DropdownMenuSeparator, Avatar } from '@librechat/client';
+import { FileText, LogOut, User } from 'lucide-react';
+import { LinkIcon, GearIcon, DropdownMenuSeparator, Avatar } from '@librechat/client';
+import { MyFilesModal } from '~/components/Chat/Input/Files/MyFilesModal';
 import { useGetStartupConfig, useGetUserBalance } from '~/data-provider';
 import { useAuthContext } from '~/hooks/AuthContext';
 import { useLocalize } from '~/hooks';
@@ -17,13 +19,16 @@ function AccountSettings() {
   });
   const [showSettings, setShowSettings] = useState(false);
   const [showMyAccount, setShowMyAccount] = useState(false);
+  const [showFiles, setShowFiles] = useRecoilState(store.showFiles);
+  const accountSettingsButtonRef = useRef<HTMLButtonElement>(null);
 
   return (
     <Select.SelectProvider>
       <Select.Select
+        ref={accountSettingsButtonRef}
         aria-label={localize('com_nav_account_settings')}
         data-testid="nav-user"
-        className="mt-text-sm flex h-auto w-full items-center gap-2 rounded-xl p-2 text-sm transition-all duration-200 ease-in-out hover:bg-surface-hover aria-[expanded=true]:bg-surface-hover"
+        className="mt-text-sm flex h-auto w-full items-center gap-2 rounded-xl p-2 text-sm transition-all duration-200 ease-in-out hover:bg-surface-active-alt aria-[expanded=true]:bg-surface-active-alt"
       >
         <div className="-ml-0.9 -mt-0.8 h-8 w-8 flex-shrink-0">
           <div className="relative flex">
@@ -38,7 +43,7 @@ function AccountSettings() {
         </div>
       </Select.Select>
       <Select.SelectPopover
-        className="popover-ui w-[305px] rounded-lg md:w-[235px]"
+        className="popover-ui w-[305px] rounded-lg md:w-[244px]"
         style={{
           transformOrigin: 'bottom',
           translate: '0 -4px',
@@ -88,6 +93,13 @@ function AccountSettings() {
           {localize('com_nav_log_out')}
         </Select.SelectItem>
       </Select.SelectPopover>
+      {showFiles && (
+        <MyFilesModal
+          open={showFiles}
+          onOpenChange={setShowFiles}
+          triggerRef={accountSettingsButtonRef}
+        />
+      )}
       {showSettings && <Settings open={showSettings} onOpenChange={setShowSettings} />}
       {showMyAccount && <MyAccount open={showMyAccount} onOpenChange={setShowMyAccount} />}
     </Select.SelectProvider>

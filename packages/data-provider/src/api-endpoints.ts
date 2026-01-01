@@ -69,6 +69,8 @@ export const messages = (params: q.MessagesListParams) => {
 
 export const messagesArtifacts = (messageId: string) => `${messagesRoot}/artifact/${messageId}`;
 
+export const messagesBranch = () => `${messagesRoot}/branch`;
+
 const shareRoot = `${BASE_URL}/api/share`;
 export const shareMessages = (shareId: string) => `${shareRoot}/${shareId}`;
 export const getSharedLink = (conversationId: string) => `${shareRoot}/link/${conversationId}`;
@@ -104,7 +106,8 @@ export const conversations = (params: q.ConversationListParams) => {
 
 export const conversationById = (id: string) => `${conversationsRoot}/${id}`;
 
-export const genTitle = () => `${conversationsRoot}/gen_title`;
+export const genTitle = (conversationId: string) =>
+  `${conversationsRoot}/gen_title/${encodeURIComponent(conversationId)}`;
 
 export const updateConversation = () => `${conversationsRoot}/update`;
 
@@ -228,6 +231,8 @@ export const agents = ({ path = '', options }: { path?: string; options?: object
 
   return url;
 };
+
+export const activeJobs = () => `${BASE_URL}/api/agents/chat/active`;
 
 export const mcp = {
   tools: `${BASE_URL}/api/mcp/tools`,
