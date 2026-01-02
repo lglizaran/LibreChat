@@ -634,7 +634,7 @@ const google: Record<string, SettingDefinition> = {
     description: 'com_endpoint_google_use_search_grounding',
     descriptionCode: true,
     type: 'boolean',
-    default: true,
+    default: false,
     component: 'switch',
     optionType: 'model',
     showDefault: false,
@@ -650,11 +650,11 @@ const googleConfig: SettingsConfiguration = [
   google.temperature,
   google.topP,
   google.topK,
-  librechat.resendFiles,
+  // librechat.resendFiles,
   google.thinking,
-  google.thinkingBudget,
-  google.web_search,
-  librechat.fileTokenLimit,
+  // google.thinkingBudget,
+  // google.web_search,
+  // librechat.fileTokenLimit,
 ];
 
 const googleCol1: SettingsConfiguration = [
@@ -669,11 +669,11 @@ const googleCol2: SettingsConfiguration = [
   google.temperature,
   google.topP,
   google.topK,
-  librechat.resendFiles,
+  // librechat.resendFiles,
   google.thinking,
-  google.thinkingBudget,
-  google.web_search,
-  librechat.fileTokenLimit,
+  // google.thinkingBudget,
+  // google.web_search,
+  // librechat.fileTokenLimit,
 ];
 
 const openAI: SettingsConfiguration = [
@@ -685,16 +685,16 @@ const openAI: SettingsConfiguration = [
   openAIParams.top_p,
   openAIParams.frequency_penalty,
   openAIParams.presence_penalty,
-  baseDefinitions.stop,
-  librechat.resendFiles,
-  baseDefinitions.imageDetail,
-  openAIParams.web_search,
+  // baseDefinitions.stop,
+  // librechat.resendFiles,
+  // baseDefinitions.imageDetail,
+  // openAIParams.web_search,
   openAIParams.reasoning_effort,
-  openAIParams.useResponsesApi,
-  openAIParams.reasoning_summary,
+  // openAIParams.useResponsesApi,
+  // openAIParams.reasoning_summary,
   openAIParams.verbosity,
-  openAIParams.disableStreaming,
-  librechat.fileTokenLimit,
+  // openAIParams.disableStreaming,
+  // librechat.fileTokenLimit,
 ];
 
 const openAICol1: SettingsConfiguration = [
@@ -710,16 +710,16 @@ const openAICol2: SettingsConfiguration = [
   openAIParams.top_p,
   openAIParams.frequency_penalty,
   openAIParams.presence_penalty,
-  baseDefinitions.stop,
-  librechat.resendFiles,
-  baseDefinitions.imageDetail,
+  // baseDefinitions.stop,
+  // librechat.resendFiles,
+  // baseDefinitions.imageDetail,
   openAIParams.reasoning_effort,
-  openAIParams.reasoning_summary,
+  // openAIParams.reasoning_summary,
   openAIParams.verbosity,
-  openAIParams.useResponsesApi,
-  openAIParams.web_search,
-  openAIParams.disableStreaming,
-  librechat.fileTokenLimit,
+  // openAIParams.useResponsesApi,
+  // openAIParams.web_search,
+  // openAIParams.disableStreaming,
+  // librechat.fileTokenLimit,
 ];
 
 const anthropicConfig: SettingsConfiguration = [
@@ -730,12 +730,12 @@ const anthropicConfig: SettingsConfiguration = [
   anthropic.temperature,
   anthropic.topP,
   anthropic.topK,
-  librechat.resendFiles,
-  anthropic.promptCache,
+  // librechat.resendFiles,
+  // anthropic.promptCache,
   anthropic.thinking,
-  anthropic.thinkingBudget,
-  anthropic.web_search,
-  librechat.fileTokenLimit,
+  // anthropic.thinkingBudget,
+  // anthropic.web_search,
+  // librechat.fileTokenLimit,
 ];
 
 const anthropicCol1: SettingsConfiguration = [
@@ -750,12 +750,12 @@ const anthropicCol2: SettingsConfiguration = [
   anthropic.temperature,
   anthropic.topP,
   anthropic.topK,
-  librechat.resendFiles,
-  anthropic.promptCache,
+  // librechat.resendFiles,
+  // anthropic.promptCache,
   anthropic.thinking,
-  anthropic.thinkingBudget,
-  anthropic.web_search,
-  librechat.fileTokenLimit,
+  // anthropic.thinkingBudget,
+  // anthropic.web_search,
+  // librechat.fileTokenLimit,
 ];
 
 const bedrockAnthropic: SettingsConfiguration = [
