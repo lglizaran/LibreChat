@@ -14,6 +14,9 @@ ENV LD_PRELOAD=/usr/lib/libjemalloc.so.2
 COPY --from=ghcr.io/astral-sh/uv:0.9.5-python3.12-alpine /usr/local/bin/uv /usr/local/bin/uvx /bin/
 RUN uv --version
 
+# Set configurable max-old-space-size with default
+ARG NODE_MAX_OLD_SPACE_SIZE=6144
+
 RUN mkdir -p /app && chown node:node /app
 WORKDIR /app
 
@@ -36,17 +39,14 @@ RUN \
     npm config set fetch-retry-maxtimeout 600000 ; \
     npm config set fetch-retries 5 ; \
     npm config set fetch-retry-mintimeout 15000 ; \
-    npm install --no-audit
+    npm ci --no-audit
+
+COPY --chown=node:node . .
 
 RUN \
-    # Build packages one by one to ensure each succeeds
-    npm run build:data-provider && \
-    npm run build:data-schemas && \
-    npm run build:api && \
-    npm run build:client-package && \
-    # React client build
-    NODE_OPTIONS="--max-old-space-size=2048" npm run build:client && \
-    # Clean cache
+    # React client build with configurable memory
+    NODE_OPTIONS="--max-old-space-size=${NODE_MAX_OLD_SPACE_SIZE}" npm run frontend; \
+    npm prune --production; \
     npm cache clean --force
 
 # Node API setup
