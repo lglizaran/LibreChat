@@ -184,7 +184,7 @@ const connect = require('./connect');
   const projectDoc = {
     _id: 0,
     tokens: '$tokens',
-    cost: { $divide: ['$cost', 1e3] }, // convert credits to usd (1000 credits -> 1 USD)
+    cost: { $divide: ['$cost', 1e3] }, // convert credits to EUR (1000 credits -> 1 EUR)
   };
   if (groupFields.includes('user')) {
     projectDoc.user = {
