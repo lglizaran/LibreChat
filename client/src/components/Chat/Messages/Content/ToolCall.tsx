@@ -9,6 +9,11 @@ import ToolCallInfo from './ToolCallInfo';
 import ProgressText from './ProgressText';
 import { logger, cn } from '~/utils';
 
+const toolNameReplacements: Record<string, string> = {
+  brave_web_search: 'web_search',
+  brave_news_search: 'web_search'
+};
+
 export default function ToolCall({
   initialProgress = 0.1,
   isLast = false,
@@ -40,21 +45,32 @@ export default function ToolCall({
     if (typeof name !== 'string') {
       return { function_name: '', domain: null, isMCPToolCall: false };
     }
+    let func = '';
+    let domainName: string | null = null;
+    let isMCP = false;
+
     if (name.includes(Constants.mcp_delimiter)) {
-      const [func, server] = name.split(Constants.mcp_delimiter);
-      return {
-        function_name: func || '',
-        domain: server && (server.replaceAll(actionDomainSeparator, '.') || null),
-        isMCPToolCall: true,
-      };
+      const [f, server] = name.split(Constants.mcp_delimiter);
+      func = f || '';
+      domainName = server && (server.replaceAll(actionDomainSeparator, '.') || null);
+      isMCP = true;
+    } else {
+      const [f, _domain] = name.includes(actionDelimiter)
+        ? name.split(actionDelimiter)
+        : [name, ''];
+      func = f || '';
+      domainName = _domain && (_domain.replaceAll(actionDomainSeparator, '.') || null);
+      isMCP = false;
     }
-    const [func, _domain] = name.includes(actionDelimiter)
-      ? name.split(actionDelimiter)
-      : [name, ''];
+
+    if (toolNameReplacements[func]) {
+      func = toolNameReplacements[func];
+    }
+
     return {
-      function_name: func || '',
-      domain: _domain && (_domain.replaceAll(actionDomainSeparator, '.') || null),
-      isMCPToolCall: false,
+      function_name: func,
+      domain: domainName,
+      isMCPToolCall: isMCP,
     };
   }, [name]);
 
@@ -211,7 +227,6 @@ export default function ToolCall({
           <div ref={contentRef}>
             {showInfo && hasInfo && (
               <ToolCallInfo
-                key="tool-call-info"
                 input={args ?? ''}
                 output={output}
                 domain={authDomain || (domain ?? '')}
