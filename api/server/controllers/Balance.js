@@ -1,6 +1,6 @@
 const { getBalanceConfig } = require('@librechat/api');
 const { Balance } = require('~/db/models');
-const { createTransaction } = require('~/models/Transaction');
+const { createTransaction, getTransactions } = require('~/models/Transaction');
 const { getAppConfig } = require('~/server/services/Config');
 const Stripe = require('stripe');
 
@@ -126,20 +126,32 @@ async function verifyPayment(req, res) {
          return res.status(403).json({ error: 'User mismatch' });
       }
 
-      // Check if transaction exists (optional, if we stored paymentIntentId in context or separate field)
-      // For now, proceed to add credits. To prevent double-spending, usually we'd store the PI ID.
-      
+      // Check if transaction exists
+      const existingTransactions = await getTransactions({
+        user: userId,
+        context: `purchase:${paymentIntentId}`,
+      });
+
+      if (existingTransactions && existingTransactions.length > 0) {
+        console.log(`[Stripe] Transaction already processed for paymentIntent: ${paymentIntentId}`);
+        const balanceData = await Balance.findOne(
+          { user: userId },
+          '-_id tokenCredits',
+        ).lean();
+        return res.json({ success: true, balance: balanceData?.tokenCredits });
+      }
+
       const appConfig = await getAppConfig();
       const balanceConfig = getBalanceConfig(appConfig);
 
       const result = await createTransaction({
         user: userId,
         tokenType: 'credits',
-        context: 'purchase', // We could append `:${paymentIntentId}` to context for dedup?
+        context: `purchase:${paymentIntentId}`,
         rawAmount: parseFloat(credits),
         balance: balanceConfig,
       });
-      
+
       console.log(`[Stripe] Verified and added ${credits} credits for user ${userId}`);
       res.json({ success: true, balance: result.balance });
     } else {
@@ -175,13 +187,26 @@ async function handleStripeWebhook(req, res) {
 
     if (userId && credits) {
       try {
+        const paymentIntentId = paymentIntent.id;
+        const existingTransactions = await getTransactions({
+          user: userId,
+          context: `purchase:${paymentIntentId}`,
+        });
+
+        if (existingTransactions && existingTransactions.length > 0) {
+          console.log(
+            `[Stripe] Webhook: Transaction already processed for paymentIntent: ${paymentIntentId}`,
+          );
+          return res.send();
+        }
+
         const appConfig = await getAppConfig();
         const balanceConfig = getBalanceConfig(appConfig);
 
         const result = await createTransaction({
           user: userId,
           tokenType: 'credits',
-          context: 'purchase',
+          context: `purchase:${paymentIntentId}`,
           rawAmount: parseFloat(credits),
           balance: balanceConfig,
         });
