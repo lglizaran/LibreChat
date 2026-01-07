@@ -7,6 +7,7 @@ const { User } = require('@librechat/data-schemas').createModels(mongoose);
 const connect = require('./connect');
 
 // docker-compose exec api npm run export-costs --month=YYYYMM --group=user,date,model,token_type
+// docker exec -it LibreChat /bin/sh -c "cd .. && npm run export-costs --month=202601 --group=user,model,token_type" - when Dockerfile.multi is used
 
 (async () => {
   await connect();
