@@ -3,10 +3,13 @@ services:
     image: librechat
     build:
       context: .
-      target: node
+      dockerfile: Dockerfile.multi
+      # target: node
       args:
         VITE_STRIPE_PUBLISHABLE_KEY: ${VITE_STRIPE_PUBLISHABLE_KEY}
     volumes:
       - type: bind
         source: ./librechat.yaml
         target: /app/librechat.yaml
+    env_file:
+      - .env
