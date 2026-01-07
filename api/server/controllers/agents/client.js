@@ -795,6 +795,12 @@ class AgentClient extends BaseClient {
     });
 
     const completion = filterMalformedContentParts(this.contentParts);
+    logger.debug('[AgentClient - client.js] Response:', {
+      completion,
+      usage: this.usage,
+      collectedUsage: this.collectedUsage,
+      options: this.getSaveOptions(),
+    });
     return { completion };
   }
 
