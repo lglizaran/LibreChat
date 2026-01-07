@@ -3,7 +3,7 @@ services:
     image: librechat
     build:
       context: .
-      dockerfile: Dockerfile.multi
+      # dockerfile: Dockerfile.multi
       # target: node
       args:
         VITE_STRIPE_PUBLISHABLE_KEY: ${VITE_STRIPE_PUBLISHABLE_KEY}
