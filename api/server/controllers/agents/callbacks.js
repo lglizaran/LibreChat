@@ -47,6 +47,13 @@ class ModelEndHandler {
       return;
     }
 
+    logger.debug('[ModelEndHandler - callbacks.js] handle:', {
+      event,
+      data,
+      metadata,
+      graph: !!graph,
+    });
+
     /** @type {string | undefined} */
     let errorMessage;
     try {
