@@ -161,7 +161,7 @@ const tokenValues = Object.assign(
     'gemini-2.5-flash-lite': { prompt: 0.0001, completion: 0.0004 },
     'gemini-2.5-pro': { prompt: 0.003, completion: 0.018 }, // modified
     'gemini-3-flash': { prompt: 0.0008, completion: 0.005 }, // modified
-    'gemini-3-pro': { prompt: 0.003, completion: 0.018 }, // modified
+    'gemini-3-pro': { prompt: 0.0022, completion: 0.014 }, // modified
     'gemini-3-pro-image': { prompt: 2, completion: 120 },
     'gemini-pro-vision': { prompt: 0.0005, completion: 0.0015 },
     grok: { prompt: 0.002, completion: 0.01 }, // Base pattern defaults to grok-2
