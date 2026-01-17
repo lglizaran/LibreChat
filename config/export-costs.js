@@ -6,8 +6,9 @@ const { silentExit } = require('./helpers');
 const { User } = require('@librechat/data-schemas').createModels(mongoose);
 const connect = require('./connect');
 
-// docker-compose exec api npm run export-costs --month=YYYYMM --group=user,date,model,token_type
-// docker exec -it LibreChat /bin/sh -c "cd .. && npm run export-costs --month=202601 --group=user,model,token_type" - when Dockerfile.multi is used
+// docker compose exec api npm run export-costs --date=YYYYMM --group=user,date,model,token_type
+// docker exec -it LibreChat /bin/sh -c "cd .. && npm run export-costs --date=202601 --group=user,model,token_type" - when Dockerfile.multi is used
+// For daily export: --date=YYYYMMDD (e.g., 20260115 for January 15, 2026)
 
 (async () => {
   await connect();
@@ -16,11 +17,11 @@ const connect = require('./connect');
    * Show the welcome / help menu
    */
   console.purple('-----------------------------');
-  console.purple('Aggregated transactions by user/month/model/tokenType');
+  console.purple('Aggregated transactions by user/date/model/tokenType');
   console.purple('-----------------------------');
 
-  // Parse optional parameters: --month=YYYYMM or YYYY-MM, --csv, --out=path
-  // Also supports env vars: MONTH, OUT
+  // Parse optional parameters: --date=YYYYMM or YYYY-MM (monthly) or YYYYMMDD (daily)
+  // Also supports env vars: DATE, OUT
   const argv = process.argv.slice(2);
   let npmOriginalArgs = [];
   try {
@@ -42,23 +43,38 @@ const connect = require('./connect');
     if (process.env[npmVar]) return process.env[npmVar];
     return undefined;
   };
-  const monthParam = getArg('month'); // e.g., 202507 or 2025-07
-  let formattedMonth;
-  if (monthParam && typeof monthParam === 'string') {
-    const m = monthParam.trim();
-    if (/^\d{6}$/.test(m)) {
-      formattedMonth = `${m.slice(0, 4)}-${m.slice(4, 6)}`;
-    } else if (/^\d{4}-\d{2}$/.test(m)) {
-      formattedMonth = m;
+  const dateParam = getArg('date'); // e.g., 202507 (monthly) or 20250715 (daily)
+  let isDaily = false;
+  let dateFilter;
+  if (dateParam && typeof dateParam === 'string') {
+    const d = dateParam.trim();
+    if (/^\d{8}$/.test(d)) {
+      // Daily format: YYYYMMDD
+      isDaily = true;
+      dateFilter = `${d.slice(0, 4)}-${d.slice(4, 6)}-${d.slice(6, 8)}`;
+    } else if (/^\d{6}$/.test(d)) {
+      // Monthly format: YYYYMM
+      dateFilter = `${d.slice(0, 4)}-${d.slice(4, 6)}`;
+    } else if (/^\d{4}-\d{2}-\d{2}$/.test(d)) {
+      isDaily = true;
+      dateFilter = d;
+    } else if (/^\d{4}-\d{2}$/.test(d)) {
+      dateFilter = d;
     } else {
-      console.warn('Ignoring invalid --month value. Expected YYYYMM or YYYY-MM.');
+      console.warn('Ignoring invalid --date value. Expected YYYYMM, YYYY-MM, YYYYMMDD, or YYYY-MM-DD.');
     }
-  } else if (monthParam === true && process.env.MONTH) {
-    const m = String(process.env.MONTH).trim();
-    if (/^\d{6}$/.test(m)) {
-      formattedMonth = `${m.slice(0, 4)}-${m.slice(4, 6)}`;
-    } else if (/^\d{4}-\d{2}$/.test(m)) {
-      formattedMonth = m;
+  } else if (dateParam === true && process.env.DATE) {
+    const d = String(process.env.DATE).trim();
+    if (/^\d{8}$/.test(d)) {
+      isDaily = true;
+      dateFilter = `${d.slice(0, 4)}-${d.slice(4, 6)}-${d.slice(6, 8)}`;
+    } else if (/^\d{6}$/.test(d)) {
+      dateFilter = `${d.slice(0, 4)}-${d.slice(4, 6)}`;
+    } else if (/^\d{4}-\d{2}-\d{2}$/.test(d)) {
+      isDaily = true;
+      dateFilter = d;
+    } else if (/^\d{4}-\d{2}$/.test(d)) {
+      dateFilter = d;
     }
   }
   const outPath = getArg('out') || (getArg('csv') ? 'user-stats.csv' : undefined);
@@ -83,15 +99,30 @@ const connect = require('./connect');
     }
   }
 
-  // Precompute month date range if filtering
+  // Precompute date range if filtering
   let startDate, endDate;
-  if (formattedMonth) {
-    const [yearStr, monthStr] = formattedMonth.split('-');
-    const year = Number(yearStr);
-    const month = Number(monthStr);
-    if (!Number.isNaN(year) && !Number.isNaN(month)) {
-      startDate = new Date(Date.UTC(year, month - 1, 1));
-      endDate = new Date(Date.UTC(year, month, 1));
+  let dateFormat = '%Y-%m'; // Default to monthly grouping
+  if (dateFilter) {
+    if (isDaily) {
+      // Daily filter: YYYY-MM-DD
+      const [yearStr, monthStr, dayStr] = dateFilter.split('-');
+      const year = Number(yearStr);
+      const month = Number(monthStr);
+      const day = Number(dayStr);
+      if (!Number.isNaN(year) && !Number.isNaN(month) && !Number.isNaN(day)) {
+        startDate = new Date(Date.UTC(year, month - 1, day));
+        endDate = new Date(Date.UTC(year, month - 1, day + 1));
+      }
+      dateFormat = '%Y-%m-%d';
+    } else {
+      // Monthly filter: YYYY-MM
+      const [yearStr, monthStr] = dateFilter.split('-');
+      const year = Number(yearStr);
+      const month = Number(monthStr);
+      if (!Number.isNaN(year) && !Number.isNaN(month)) {
+        startDate = new Date(Date.UTC(year, month - 1, 1));
+        endDate = new Date(Date.UTC(year, month, 1));
+      }
     }
   }
 
@@ -122,13 +153,13 @@ const connect = require('./connect');
     console.log(sep);
   }
 
-  // Aggregate transactions by user, month-year, model, tokenType
+  // Aggregate transactions by user, date, model, tokenType
   const txColl = mongoose.connection.db.collection('transactions');
 
   const pipeline = [];
 
-  if (formattedMonth && startDate && endDate) {
-    // Match by createdAt date range for the requested month (UTC boundaries)
+  if (dateFilter && startDate && endDate) {
+    // Match by createdAt date range for the requested period (UTC boundaries)
     pipeline.push({ $match: { createdAt: { $gte: startDate, $lt: endDate } } });
   }
 
@@ -140,14 +171,14 @@ const connect = require('./connect');
       rawAmount: 1,
       tokenValue: 1,
       createdAt: 1,
-      month: { $dateToString: { format: '%Y-%m', date: '$createdAt', timezone: 'UTC' } },
+      dateGroup: { $dateToString: { format: dateFormat, date: '$createdAt', timezone: 'UTC' } },
     },
   });
 
   // Build dynamic group stage based on requested grouping fields
   const groupMap = {
     user: { idKey: 'user', expr: '$user' },
-    date: { idKey: 'month', expr: '$month' },
+    date: { idKey: 'dateGroup', expr: '$dateGroup' },
     model: { idKey: 'model', expr: '$model' },
     token_type: { idKey: 'tokenType', expr: '$tokenType' },
   };
@@ -196,7 +227,7 @@ const connect = require('./connect');
     };
   }
   if (groupFields.includes('date')) {
-    projectDoc.date = '$_id.month';
+    projectDoc.date = '$_id.dateGroup';
   }
   if (groupFields.includes('model')) {
     projectDoc.model = '$_id.model';
@@ -213,8 +244,8 @@ const connect = require('./connect');
   }
   pipeline.push({ $sort: sortDoc });
 
-  if (formattedMonth) {
-    console.purple(`Filter: ${formattedMonth}`);
+  if (dateFilter) {
+    console.purple(`Filter: ${dateFilter}`);
   } else {
     console.purple('Filter: none');
   }
