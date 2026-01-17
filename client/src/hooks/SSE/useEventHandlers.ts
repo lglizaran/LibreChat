@@ -628,6 +628,21 @@ export default function useEventHandlers({
           errorMessage.messageId = v4();
         }
 
+        // Ensure error content part exists for agent messages (which render via content parts)
+        // This allows the Error component to properly display error messages like insufficient funds
+        if (!errorMessage.content || !Array.isArray(errorMessage.content)) {
+          errorMessage.content = [];
+        }
+
+        // Add error content part if there's error text
+        const errorText = metadata.text ?? '';
+        if (errorText && errorMessage.content.length === 0) {
+          errorMessage.content.push({
+            type: ContentTypes.ERROR,
+            [ContentTypes.ERROR]: errorText,
+          });
+        }
+
         return tMessageSchema.parse(errorMessage) as TMessage;
       };
 
